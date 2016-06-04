@@ -377,7 +377,7 @@ binErrors = []'; % количества битовых ошибок
 binErrorProbabilities = []'; % и вероятностей возникновения битовых ошибок
 for snr = -60 : 5 : 60
     chanData = awgn( modData, snr ); % сигнал в канале передачи
-    binResData = mskdemod( chanData, lengthOfBit ); % демодуляция сигнала
+    binResData = mphaseVectorskdemod( chanData, lengthOfBit ); % демодуляция сигнала
     % подсчет ошибок
     [ binErrors( end + 1 ), binErrorProbabilities( end + 1 ) ] = biterr( [ binInputData( 1, : ) binInputData( 2, : ) binInputData( 3, : ) ], binResData );
     snrs( end + 1 ) = snr;
@@ -421,5 +421,180 @@ ylabel( 'A, амплитуда, В' );
 title( 'Спектр фазомодулированного сигнала' );
  
 % картинка 38
+
+
+% PSK
+modData = pskmod( decInputData, M ); % модулируем
+scatterplot( modData ) % созвездие
+grid on
+
+% картинка 39
+
+scatterplot( awgn( modData, -10 ) ) % созвездие при передаче
+
+% картинка 40
+
+% моделируем передачу
+snrs = []'; % инициализируем векторы соотношения с/ш,
+binErrors = []'; % количества битовых ошибок
+binErrorProbabilities = []'; % и вероятностей возникновения битовых ошибок
+decErrors = []'; % количества символьных ошибок
+decErrorProbabilities = []'; % и вероятностей возникновения символьных ошибок
+for snr = -60 : 5 : 60
+    chanData = awgn( modData, snr ); % сигнал в канале передачи
+    decResData = pskdemod( chanData, M ); % демодуляция сигнала
+    binResData = de2bi( decResData ); % представляем битами
+    % подсчет ошибок
+    [ binErrors( end + 1 ), binErrorProbabilities( end + 1 ) ] = biterr( binInputData, binResData );
+    [ decErrors( end + 1 ), decErrorProbabilities( end + 1 ) ] = symerr( decInputData, decResData );
+    snrs( end + 1 ) = snr;
+end
+% строим графики
+plot( snrs, binErrors )
+grid on
+xlabel( 'SNR, дБ' );
+ylabel( 'Количество ошибок' );
+title( 'Зависимость количества битовых ошибок от соотношения сигнал/шум при передаче PSK сигнала' );
+
+% картинка 41
+
+plot( snrs, binErrorProbabilities )
+grid on
+xlabel( 'SNR, дБ' );
+ylabel( 'Вероятность ошибки' );
+title( 'Зависимость вероятности возникновения битовой ошибки от соотношения сигнал/шум' );
+
+% картинка 42
+
+plot( snrs, decErrors )
+grid on
+xlabel( 'SNR, дБ' );
+ylabel( 'Количество ошибок' );
+title( 'Зависимость количества символьных ошибок от соотношения сигнал/шум при передаче РSK сигнала' );
+
+% картинка 43
+
+plot( snrs, decErrorProbabilities )
+grid on
+xlabel( 'SNR, дБ' );
+ylabel( 'Вероятность ошибки' );
+title( 'Зависимость вероятности возникновения символьной ошибки от соотношения сигнал/шум' );
+
+% картинка 44
+
+
+% PPM - это то же, что DPSK, насколько я понял
+modData = dpskmod( decInputData, M ); % модулируем
+scatterplot( modData )
+grid on
+
+% картинка 45
+
+% моделируем передачу
+snrs = []'; % инициализируем векторы соотношения с/ш,
+binErrors = []'; % количества битовых ошибок
+binErrorProbabilities = []'; % и вероятностей возникновения битовых ошибок
+decErrors = []'; % количества символьных ошибок
+decErrorProbabilities = []'; % и вероятностей возникновения символьных ошибок
+for snr = -60 : 5 : 60
+    chanData = awgn( modData, snr ); % сигнал в канале передачи
+    decResData = dpskdemod( chanData, M ); % демодуляция сигнала
+    binResData = de2bi( decResData ); % представляем битами
+    % подсчет ошибок
+    [ binErrors( end + 1 ), binErrorProbabilities( end + 1 ) ] = biterr( binInputData, binResData );
+    [ decErrors( end + 1 ), decErrorProbabilities( end + 1 ) ] = symerr( decInputData, decResData );
+    snrs( end + 1 ) = snr;
+end
+% строим графики
+plot( snrs, binErrors )
+grid on
+xlabel( 'SNR, дБ' );
+ylabel( 'Количество ошибок' );
+title( 'Зависимость количества битовых ошибок от соотношения сигнал/шум при передаче PPM сигнала' );
+
+% картинка 46
+
+plot( snrs, binErrorProbabilities )
+grid on
+xlabel( 'SNR, дБ' );
+ylabel( 'Вероятность ошибки' );
+title( 'Зависимость вероятности возникновения битовой ошибки от соотношения сигнал/шум' );
+
+% картинка 47
+
+plot( snrs, decErrors )
+grid on
+xlabel( 'SNR, дБ' );
+ylabel( 'Количество ошибок' );
+title( 'Зависимость количества символьных ошибок от соотношения сигнал/шум при передаче РPM сигнала' );
+
+% картинка 48
+
+plot( snrs, decErrorProbabilities )
+grid on
+xlabel( 'SNR, дБ' );
+ylabel( 'Вероятность ошибки' );
+title( 'Зависимость вероятности возникновения символьной ошибки от соотношения сигнал/шум' );
+
+% картинка 49
+
+
+% OQPSK
+modData = oqpskmod( mod( decInputData, 4 ) );
+scatterplot( modData )
+grid on
+
+% картинка 50
+
+% моделируем передачу
+snrs = []'; % инициализируем векторы соотношения с/ш,
+binErrors = []'; % количества битовых ошибок
+binErrorProbabilities = []'; % и вероятностей возникновения битовых ошибок
+decErrors = []'; % количества символьных ошибок
+decErrorProbabilities = []'; % и вероятностей возникновения символьных ошибок
+for snr = -60 : 5 : 60
+    chanData = awgn( modData, snr ); % сигнал в канале передачи
+    decResData = oqpskdemod( chanData ); % демодуляция сигнала
+    binResData = de2bi( decResData ); % представляем битами
+    % подсчет ошибок
+    [ binErrors( end + 1 ), binErrorProbabilities( end + 1 ) ] = biterr( de2bi( mod( decInputData, 4 ) ) , binResData );
+    [ decErrors( end + 1 ), decErrorProbabilities( end + 1 ) ] = symerr( decInputData, decResData );
+    snrs( end + 1 ) = snr;
+end
+% строим графики
+plot( snrs, binErrors )
+grid on
+xlabel( 'SNR, дБ' );
+ylabel( 'Количество ошибок' );
+title( 'Зависимость количества битовых ошибок от соотношения сигнал/шум при передаче OQPSK сигнала' );
+
+% картинка 51
+
+plot( snrs, binErrorProbabilities )
+grid on
+xlabel( 'SNR, дБ' );
+ylabel( 'Вероятность ошибки' );
+title( 'Зависимость вероятности возникновения битовой ошибки от соотношения сигнал/шум' );
+
+% картинка 52
+
+plot( snrs, decErrors )
+grid on
+xlabel( 'SNR, дБ' );
+ylabel( 'Количество ошибок' );
+title( 'Зависимость количества символьных ошибок от соотношения сигнал/шум при передаче OQPSK сигнала' );
+
+% картинка 53
+
+plot( snrs, decErrorProbabilities )
+grid on
+xlabel( 'SNR, дБ' );
+ylabel( 'Вероятность ошибки' );
+title( 'Зависимость вероятности возникновения символьной ошибки от соотношения сигнал/шум' );
+
+% картинка 54
+
+
+
 
 
