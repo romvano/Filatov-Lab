@@ -596,5 +596,19 @@ title( 'Зависимость вероятности возникновения
 
 
 
+% Дельта-модуляция
+partition = [ -10 : 10 ]; % параметры дельта-модуляции
+codebook = [ -9.5 : 9.5 ];
+[ partition, codebook ] = lloyds( s, codebook ); % оптимизация
+predictor = [ 0 1 ]; % формула 
+y = dpcmenco( s, codebook, partition, predictor ); % модулируем
+x = dpcmdeco( y, codebook, predictor ); % демодуляция
+plot( t, s )
+hold on
+plot( t, x )
+legend( 'До модуляции', 'После демодуляции' )
+xlabel( 't, Время, с' )
+ylabel( 'A, Амплитуда, В' )
+title( 'Дельта-модуляция' )
 
-
+% картинка 55
