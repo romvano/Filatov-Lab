@@ -612,3 +612,49 @@ ylabel( 'A, Амплитуда, В' )
 title( 'Дельта-модуляция' )
 
 % картинка 55
+
+Y = 2 * abs( fft( x ) / length( x ) ); % строим спектр
+freqs = Fs * ( 0 : length( x ) / 2 ) / length( x ); % вектор частот
+plot( freqs, Y( 1 : length( x ) / 2 + 1 ) ); % график спектра
+xlabel( 'f, частота, Гц' );
+ylabel( 'A, амплитуда, В' );
+title( 'Спектр дельтамодулированного сигнала' );
+
+% картинка 56
+
+
+% PCM
+[ index, quantized ] = quantiz( s, partition, codebook ); % квантуем
+plot( t, s )
+hold on
+plot( t, quantized )
+legend( 'Оригинальный сигнал', 'Квантованный сигнал' )
+xlabel( 'Время t, с' )
+ylabel( 'Амплитуда сигнала А, В' )
+title( 'Импульсно-кодовая модуляция' )
+
+% картинка 57
+
+
+% PWM
+m = Am * sawtooth( 2 * pi * Fm * t );
+for i = 1 : length( s )
+    if s( i ) >= m( i )
+        sig( i ) = 1;
+    else
+        sig( i ) = 0;
+    end
+end
+plot( t, s )
+hold on
+plot( t, sig )
+grid on
+legend( 'Сигнал', 'Модулированный сигнал' )
+xlabel( 'Время t, c' )
+ylabel( 'Амплитуда А, В' )
+title( 'Широтно-импульсная модуляция' )
+
+% картинка 58
+
+
+
